@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:rye_coffee/components/button.login.dart';
 import 'package:rye_coffee/components/passwordfield.login.dart';
 import 'package:rye_coffee/components/textfield.login.dart';
 
@@ -47,7 +48,10 @@ class _LoginPageState extends State<LoginPage> {
                 onChange: (val) {
                   log(val);
                 },
-                margin: const EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(bottom: 20),
+              ),
+              const ButtonLogin(
+                margin: EdgeInsets.only(bottom: 10),
               )
             ],
           ),
