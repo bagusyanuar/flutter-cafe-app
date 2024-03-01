@@ -5,11 +5,13 @@ import 'package:flutter/src/widgets/framework.dart';
 class PasswordFieldLogin extends StatelessWidget {
   final Function(String val) onChange;
   final EdgeInsetsGeometry? margin;
+  final String? placeholder;
 
   const PasswordFieldLogin({
     Key? key,
     required this.onChange,
     this.margin,
+    this.placeholder = '',
   }) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class PasswordFieldLogin extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: 10),
           prefixIcon: const Icon(Icons.lock_outline),
           prefixIconColor: Colors.grey,
-          hintText: "password",
+          hintText: placeholder,
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey, width: 1.0),
           ),

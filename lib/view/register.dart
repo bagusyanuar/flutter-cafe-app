@@ -3,20 +3,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:rye_coffee/components/button.login.dart';
 import 'package:rye_coffee/components/passwordfield.login.dart';
 import 'package:rye_coffee/components/textfield.login.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  bool onLoading = false;
-
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,16 +49,23 @@ class _LoginPageState extends State<LoginPage> {
                 onChange: (val) {
                   log(val);
                 },
-                margin: const EdgeInsets.only(bottom: 20),
+                margin: const EdgeInsets.only(bottom: 10),
                 placeholder: 'password',
               ),
+              PasswordFieldLogin(
+                onChange: (val) {
+                  log(val);
+                },
+                margin: const EdgeInsets.only(bottom: 20),
+                placeholder: 'konfirmasi password',
+              ),
               ButtonLogin(
-                text: 'Login',
+                text: 'Register',
                 margin: const EdgeInsets.only(bottom: 10),
                 onClick: () {
-                  _loginHandler();
+                  log('aabc');
                 },
-                onLoading: onLoading,
+                onLoading: false,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: const Text(
-                      'Belum Jadi Member?',
+                      'Sudah Jadi Member?',
                       style: TextStyle(
                         color: Colors.black54,
                         fontSize: 12,
@@ -77,10 +83,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).popAndPushNamed('/register');
+                      Navigator.of(context).popAndPushNamed('/login');
                     },
                     child: const Text(
-                      'Daftar Sekarang',
+                      'Login',
                       style: TextStyle(
                           color: Colors.brown,
                           fontSize: 12,
@@ -94,17 +100,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  void _loginHandler() async {
-    setState(() {
-      onLoading = true;
-    });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      onLoading = false;
-    });
-    // ignore: use_build_context_synchronously
-    Navigator.of(context).popAndPushNamed('/home');
   }
 }
