@@ -28,7 +28,6 @@ class ChipCategories extends StatelessWidget {
           children: data.map((e) {
             int key = data.indexOf(e);
             bool isSelected = key == selectedChip;
-            log(key.toString());
             return GestureDetector(
               onTap: () {
                 onChipChange(key);
