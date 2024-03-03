@@ -20,9 +20,10 @@ class ProductList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: double.infinity,
       child: GridView.count(
+        padding: const EdgeInsets.only(bottom: 60),
         crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,

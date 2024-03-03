@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
+import 'package:rye_coffee/helper/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ModalAddToCart extends StatefulWidget {
@@ -36,7 +37,7 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       log('test');
-      _initCarts();
+      // _initCarts();
     });
   }
 
@@ -165,20 +166,6 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
   }
 
   void _initCarts() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? carts = preferences.getString('carts');
-    log(carts.toString());
-    if (carts == null) {
-      List<Map<String, dynamic>> tmpCarts = [];
-      Map<String, dynamic> tmpItems = {
-        'id': widget.id,
-        'name': widget.name,
-        'price': widget.price,
-        'qty': textEditingController.text,
-        'type': widget.type,
-      };
-      tmpCarts.add(tmpItems);
-      String tmpCartsJSON = json.encode(tmpCarts);
-    }
+    saveCartToStorage(widget.id, widget.name, widget.price, 1, 'menu');
   }
 }
