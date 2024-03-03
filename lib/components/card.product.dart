@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 class CardProduct extends StatelessWidget {
   final String image;
   final String name;
-  final String price;
+  final int price;
   final int id;
-  final Function(int id) onCartTap;
+  final Function(int id, String name, int price) onCartTap;
   final Function(int id) onInfoTap;
   // final Function(int id) onCardTap;
 
@@ -25,6 +25,7 @@ class CardProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    NumberFormat numberFormat = NumberFormat.decimalPattern('id');
     return GestureDetector(
       onTap: () {
         // onCardTap(id);
@@ -93,7 +94,7 @@ class CardProduct extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Rp$price',
+                      'Rp${numberFormat.format(price)}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -106,7 +107,7 @@ class CardProduct extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            onCartTap(id);
+                            onCartTap(id, name, price);
                           },
                           child: Container(
                             height: 25,

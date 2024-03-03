@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:rye_coffee/components/modal.add.cart.dart';
 import 'package:rye_coffee/components/product.list.dart';
 import 'package:rye_coffee/components/chip.categories.dart';
 import 'package:rye_coffee/components/navbar.dart';
 import 'package:rye_coffee/dummy/data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -46,9 +48,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Expanded(
                       child: ProductList(
-                        onCartTap: (id) {
+                        onCartTap: (id, name, price) {
                           log('cart tapped ${id.toString()}');
-                          _showModalCart(context);
+                          _showModalCart(context, id, name, price, 'menu');
                         },
                         onInfoTap: (id) {
                           log('info tapped ${id.toString()}');
@@ -65,20 +67,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showModalCart(BuildContext rootContext) {
+  void _showModalCart(
+    BuildContext rootContext,
+    int id,
+    String name,
+    int price,
+    String type,
+  ) {
     showModalBottomSheet(
       context: rootContext,
       isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(15),
+          topLeft: Radius.circular(15),
+        ),
+      ),
       builder: (builder) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.2,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-            topRight: Radius.circular(10),
-            topLeft: Radius.circular(10),
-          )),
-          child: Text('modal'),
+        return ModalAddToCart(
+          id: id,
+          name: name,
+          price: price,
+          type: type,
         );
       },
     );

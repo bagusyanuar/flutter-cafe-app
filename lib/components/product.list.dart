@@ -8,7 +8,7 @@ import 'package:rye_coffee/dummy/data.dart';
 
 class ProductList extends StatelessWidget {
   // final Function(int id)? onProductTap;
-  final Function(int id) onCartTap;
+  final Function(int id, String name, int price) onCartTap;
   final Function(int id) onInfoTap;
 
   const ProductList({
@@ -28,17 +28,11 @@ class ProductList extends StatelessWidget {
         mainAxisSpacing: 10,
         childAspectRatio: 3 / 4,
         children: DummyProducts.map((e) {
-          NumberFormat numberFormat = NumberFormat.decimalPattern('id');
           return CardProduct(
             image: e['image'].toString(),
             name: e['name'].toString(),
-            price: numberFormat.format(e['price'] as int),
+            price: e['price'] as int,
             id: e['id'] as int,
-            // onCardTap: (id) {
-            //   if (onProductTap != null) {
-            //     onProductTap!(id);
-            //   }
-            // },
             onCartTap: onCartTap,
             onInfoTap: onInfoTap,
           );
