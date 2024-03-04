@@ -24,6 +24,21 @@ class _HomePageState extends State<HomePage> {
   int cartQty = 0;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initPage();
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -75,13 +90,25 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(20),
               child: ButtonFloatingCart(
                 qty: cartQty,
-                onTapCart: () {},
+                onTapCart: () {
+                  Navigator.pushNamed(context, '/cart').then((value) {
+                    log(value.toString());
+                    _initPage();
+                  });
+                },
               ),
             ),
           )
         ],
       ),
     );
+  }
+
+  void _initPage() async {
+    int countCart = await getCartCount();
+    setState(() {
+      cartQty = countCart;
+    });
   }
 
   void _eventAppendCart(
@@ -98,6 +125,10 @@ class _HomePageState extends State<HomePage> {
     if (!error) {
       // ignore: use_build_context_synchronously
       _showModalCart(rootContext, id, name, price, type);
+      int countCart = await getCartCount();
+      setState(() {
+        cartQty = countCart;
+      });
     }
     log(eventResult.toString());
   }

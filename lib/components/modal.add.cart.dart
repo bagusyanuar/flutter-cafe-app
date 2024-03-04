@@ -160,9 +160,16 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
       'qty': textEditingController.text,
       'type': widget.type,
     };
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? carts = preferences.getString('carts');
-    log(carts.toString());
+    // SharedPreferences preferences = await SharedPreferences.getInstance();
+    // String? carts = preferences.getString('carts');
+    int newQty = int.parse(textEditingController.text);
+    Map<String, dynamic> changeResult =
+        await changeQtyCartStorage(widget.id, widget.type, newQty);
+    bool error = changeResult['error'] as bool;
+    String message = changeResult['message'] as String;
+    if (error) {
+      log(message);
+    }
   }
 
   void _initCarts() async {

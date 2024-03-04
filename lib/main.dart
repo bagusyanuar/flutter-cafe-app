@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rye_coffee/view/cart.dart';
 import 'package:rye_coffee/view/home.dart';
 import 'package:rye_coffee/view/login.dart';
 import 'package:rye_coffee/view/register.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
+        '/cart': (context) => const CartPage(),
         // '/dashboard': (context) => Dashboard(),
         // '/order': (context) => OrderView(),
         // '/cart': (context) => CartView(),
