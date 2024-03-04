@@ -13,6 +13,7 @@ class ModalAddToCart extends StatefulWidget {
   final String name;
   final int price;
   final String type;
+  final String image;
 
   const ModalAddToCart({
     Key? key,
@@ -20,6 +21,7 @@ class ModalAddToCart extends StatefulWidget {
     required this.name,
     required this.price,
     required this.type,
+    required this.image,
   }) : super(key: key);
 
   @override
@@ -153,15 +155,6 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
   }
 
   void _onChangeQty() async {
-    Map<String, dynamic> data = {
-      'id': widget.id,
-      'name': widget.name,
-      'price': widget.price,
-      'qty': textEditingController.text,
-      'type': widget.type,
-    };
-    // SharedPreferences preferences = await SharedPreferences.getInstance();
-    // String? carts = preferences.getString('carts');
     int newQty = int.parse(textEditingController.text);
     Map<String, dynamic> changeResult =
         await changeQtyCartStorage(widget.id, widget.type, newQty);
@@ -173,6 +166,7 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
   }
 
   void _initCarts() async {
-    saveCartToStorage(widget.id, widget.name, widget.price, 1, 'menu');
+    saveCartToStorage(
+        widget.id, widget.name, widget.price, 1, widget.image, 'menu');
   }
 }

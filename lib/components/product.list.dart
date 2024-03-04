@@ -8,13 +8,16 @@ import 'package:rye_coffee/dummy/data.dart';
 
 class ProductList extends StatelessWidget {
   // final Function(int id)? onProductTap;
-  final Function(int id, String name, int price) onCartTap;
+  final String type;
+  final Function(int id, String name, int price, String image, String type)
+      onCartTap;
   final Function(int id) onInfoTap;
 
   const ProductList({
     Key? key,
     required this.onCartTap,
     required this.onInfoTap,
+    required this.type,
     // this.onProductTap,
   }) : super(key: key);
 
@@ -34,6 +37,7 @@ class ProductList extends StatelessWidget {
             name: e['name'].toString(),
             price: e['price'] as int,
             id: e['id'] as int,
+            type: type,
             onCartTap: onCartTap,
             onInfoTap: onInfoTap,
           );

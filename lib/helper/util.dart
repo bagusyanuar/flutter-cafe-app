@@ -8,6 +8,7 @@ Future<Map<String, dynamic>> saveCartToStorage(
   String name,
   int price,
   int qty,
+  String image,
   String type,
 ) async {
   Map<String, dynamic> result = {'error': true, 'message': 'error add to cart'};
@@ -21,6 +22,7 @@ Future<Map<String, dynamic>> saveCartToStorage(
         'name': name,
         'price': price,
         'qty': 1,
+        'image': image,
         'type': type,
       };
       tmpCarts.add(tmpItem);
@@ -38,6 +40,7 @@ Future<Map<String, dynamic>> saveCartToStorage(
             'name': name,
             'price': price,
             'qty': 1,
+            'image': image,
             'type': type,
           };
           cartJSON.add(newItem);
@@ -72,8 +75,9 @@ Future<Map<String, dynamic>> changeQtyCartStorage(
           int itemIndex = cartJSON.indexOf(item);
           item['qty'] = qty;
           cartJSON[itemIndex] = item;
+          String newCartJSON = json.encode(cartJSON);
+          preferences.setString('carts', newCartJSON);
           result = {'error': false, 'message': 'success change qty'};
-          log(cartJSON.toString());
         } else {
           result = {'error': true, 'message': 'item not in carts'};
         }
@@ -124,6 +128,55 @@ Future<Map<String, dynamic>> clearCarts() async {
     }
   } catch (e) {
     result = {'error': true, 'message': e.toString()};
+  }
+  return result;
+}
+
+Future<List<dynamic>> getCartStorage() async {
+  List<dynamic> results = [];
+  try {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? carts = preferences.getString('carts');
+    if (carts != null) {
+      dynamic cartJSON = json.decode(carts);
+      if (cartJSON is List<dynamic>) {
+        results = cartJSON;
+      }
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+  return results;
+}
+
+Future<Map<String, int>> getSummaryCarts() async {
+  Map<String, int> result = {'price': 0, 'point': 0};
+  try {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? carts = preferences.getString('carts');
+    if (carts != null) {
+      dynamic cartJSON = json.decode(carts);
+      if (cartJSON is List<dynamic>) {
+        int price = 0;
+        int point = 0;
+        for (var element in cartJSON) {
+          if (element['type'] == 'menu') {
+            int itemPrice = element['price'] as int;
+            int itemQty = element['qty'] as int;
+            price += (itemPrice * itemQty);
+          }
+
+          if (element['type'] == 'package') {
+            int itemPrice = element['price'] as int;
+            int itemQty = element['qty'] as int;
+            point += (itemPrice * itemQty);
+          }
+        }
+        result = {'price': price, 'point': point};
+      }
+    }
+  } catch (e) {
+    log(e.toString());
   }
   return result;
 }

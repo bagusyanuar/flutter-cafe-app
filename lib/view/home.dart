@@ -68,9 +68,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Expanded(
                           child: ProductList(
-                            onCartTap: (id, name, price) {
+                            type: 'menu',
+                            onCartTap: (id, name, price, image, type) {
                               _eventAppendCart(
-                                  context, id, name, price, 'menu');
+                                context,
+                                id,
+                                name,
+                                price,
+                                image,
+                                type,
+                              );
                             },
                             onInfoTap: (id) {
                               log('info tapped ${id.toString()}');
@@ -116,21 +123,21 @@ class _HomePageState extends State<HomePage> {
     int id,
     String name,
     int price,
+    String image,
     String type,
   ) async {
     Map<String, dynamic> eventResult =
-        await saveCartToStorage(id, name, price, 1, type);
+        await saveCartToStorage(id, name, price, 1, image, type);
     bool error = eventResult['error'] as bool;
     String message = eventResult['message'] as String;
     if (!error) {
       // ignore: use_build_context_synchronously
-      _showModalCart(rootContext, id, name, price, type);
+      _showModalCart(rootContext, id, name, price, image, type);
       int countCart = await getCartCount();
       setState(() {
         cartQty = countCart;
       });
     }
-    log(eventResult.toString());
   }
 
   void _showModalCart(
@@ -138,6 +145,7 @@ class _HomePageState extends State<HomePage> {
     int id,
     String name,
     int price,
+    String image,
     String type,
   ) {
     showModalBottomSheet(
@@ -154,6 +162,7 @@ class _HomePageState extends State<HomePage> {
           id: id,
           name: name,
           price: price,
+          image: image,
           type: type,
         );
       },

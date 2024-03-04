@@ -8,7 +8,9 @@ class CardProduct extends StatelessWidget {
   final String name;
   final int price;
   final int id;
-  final Function(int id, String name, int price) onCartTap;
+  final String type;
+  final Function(int id, String name, int price, String image, String type)
+      onCartTap;
   final Function(int id) onInfoTap;
   // final Function(int id) onCardTap;
 
@@ -20,6 +22,7 @@ class CardProduct extends StatelessWidget {
     required this.id,
     required this.onCartTap,
     required this.onInfoTap,
+    required this.type,
     // required this.onCardTap,
   }) : super(key: key);
 
@@ -107,7 +110,7 @@ class CardProduct extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            onCartTap(id, name, price);
+                            onCartTap(id, name, price, image, type);
                           },
                           child: Container(
                             height: 25,
