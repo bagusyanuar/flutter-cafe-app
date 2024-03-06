@@ -99,7 +99,6 @@ class _HomePageState extends State<HomePage> {
                 qty: cartQty,
                 onTapCart: () {
                   Navigator.pushNamed(context, '/cart').then((value) {
-                    log(value.toString());
                     _initPage();
                   });
                 },
@@ -164,6 +163,12 @@ class _HomePageState extends State<HomePage> {
           price: price,
           image: image,
           type: type,
+          onGoToCart: () {
+            log('go to cart');
+            Navigator.of(rootContext).pushNamed('/cart').then((value) {
+              _initPage();
+            });
+          },
         );
       },
     );

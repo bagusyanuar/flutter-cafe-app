@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
+import 'package:rye_coffee/components/dialog.confirmation.dart';
 import 'package:rye_coffee/helper/util.dart';
 
 class CardCart extends StatefulWidget {
@@ -13,7 +14,9 @@ class CardCart extends StatefulWidget {
   final int price;
   final String image;
   final String type;
+  final int cartIndex;
   final VoidCallback onChangeQty;
+  final VoidCallback onRemoveItem;
 
   const CardCart({
     Key? key,
@@ -24,6 +27,8 @@ class CardCart extends StatefulWidget {
     required this.image,
     required this.type,
     required this.onChangeQty,
+    required this.cartIndex,
+    required this.onRemoveItem,
   }) : super(key: key);
 
   @override
@@ -112,13 +117,14 @@ class _CardCartState extends State<CardCart> {
                     ],
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: 80,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       GestureDetector(
                         onTap: () {
+                          log(widget.cartIndex.toString());
                           String currentQtyString = textEditingController.text;
                           int currentQty = int.parse(currentQtyString);
                           if (currentQty > 1) {
@@ -126,6 +132,8 @@ class _CardCartState extends State<CardCart> {
                             textEditingController.text = nextQty.toString();
                             _onChangeQty();
                             widget.onChangeQty();
+                          } else {
+                            _eventRemoveItemCart(context, widget.cartIndex);
                           }
                         },
                         child: Container(
@@ -205,23 +213,34 @@ class _CardCartState extends State<CardCart> {
       log(message);
     }
   }
+
+  void _eventRemoveItemCart(BuildContext rootContext, int cartIndex) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogConfirmation(
+          title: 'Confirmation',
+          content: 'Are you sure to remove this product?',
+          onYesTap: () {
+            _removeItemCartHandler(context, cartIndex);
+          },
+          onNoTap: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
+  void _removeItemCartHandler(BuildContext dialogContext, int cartIndex) async {
+    Map<String, dynamic> removeResult = await removeCartItem(cartIndex);
+    bool error = removeResult['error'] as bool;
+    String message = removeResult['message'] as String;
+    log(removeResult.toString());
+    if (!error) {
+      widget.onRemoveItem();
+      // ignore: use_build_context_synchronously
+      Navigator.pop(dialogContext);
+    }
+  }
 }
-
-// class CardCart extends StatelessWidget {
-
-
-//   const CardCart(
-//       {Key? key,
-//       required this.id,
-//       required this.name,
-//       required this.qty,
-//       required this.price,
-//       required this.image,
-//       required this.type})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-    
-//   }
-// }

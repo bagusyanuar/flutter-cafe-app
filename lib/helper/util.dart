@@ -180,3 +180,27 @@ Future<Map<String, int>> getSummaryCarts() async {
   }
   return result;
 }
+
+Future<Map<String, dynamic>> removeCartItem(int index) async {
+  Map<String, dynamic> result = {'error': true, 'message': 'error remove item'};
+  try {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? carts = preferences.getString('carts');
+    if (carts != null) {
+      dynamic cartJSON = json.decode(carts);
+      if (cartJSON is List<dynamic>) {
+        cartJSON.removeAt(index);
+        String newCartJSON = json.encode(cartJSON);
+        preferences.setString('carts', newCartJSON);
+        result = {'error': false, 'message': 'success remove item'};
+      } else {
+        result = {'error': true, 'message': 'cart is not list type'};
+      }
+    } else {
+      result = {'error': true, 'message': 'cart empty'};
+    }
+  } catch (e) {
+    result = {'error': true, 'message': e.toString()};
+  }
+  return result;
+}

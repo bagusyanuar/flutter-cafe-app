@@ -72,6 +72,7 @@ class _CartPageState extends State<CartPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: dataCart.map((e) {
+                        int cartIndex = dataCart.indexOf(e);
                         int id = e['id'] as int;
                         String name = e['name'] as String;
                         int price = e['price'] as int;
@@ -84,8 +85,12 @@ class _CartPageState extends State<CartPage> {
                           price: price,
                           image: image,
                           type: 'menu',
+                          cartIndex: cartIndex,
                           onChangeQty: () {
                             _getSummaryCart();
+                          },
+                          onRemoveItem: () {
+                            _initPage();
                           },
                         );
                       }).toList(),
@@ -97,7 +102,7 @@ class _CartPageState extends State<CartPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               width: MediaQuery.of(context).size.width,
-              height: 150,
+              // height: 140,
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -191,6 +196,9 @@ class _CartPageState extends State<CartPage> {
     Map<String, dynamic> clearResult = await clearCarts();
     bool error = clearResult['error'] as bool;
     String message = clearResult['message'] as String;
+    if (!error) {
+      _initPage();
+    }
   }
 
   void _getSummaryCart() async {
@@ -205,7 +213,6 @@ class _CartPageState extends State<CartPage> {
 
   void _initPage() async {
     List<dynamic> cartStorage = await getCartStorage();
-    log(cartStorage.toString());
     setState(() {
       dataCart = cartStorage;
     });
