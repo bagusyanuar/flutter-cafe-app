@@ -5,8 +5,11 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:rye_coffee/components/card.cart.dart';
+import 'package:rye_coffee/components/dialog.confirmation.dart';
+import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/components/top.navbar.dart';
 import 'package:rye_coffee/helper/util.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -53,7 +56,7 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
               onActionTap: () {
-                _eventClearCart();
+                _eventClearCart(context);
               },
             ),
             Flexible(
@@ -99,104 +102,37 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              width: MediaQuery.of(context).size.width,
-              // height: 140,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 3,
-                    blurRadius: 4,
-                    offset: const Offset(4, 4), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          'Total',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.brown,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Rp${numberFormat.format(totalPrice)}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.brown,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 3),
-                                child: const Icon(
-                                  Icons.monetization_on,
-                                  color: Colors.orange,
-                                  size: 14,
-                                ),
-                              ),
-                              Text(
-                                numberFormat.format(totalPoint),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.brown,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Checkout',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
           ],
         ),
       ),
     );
   }
 
-  void _eventClearCart() async {
+  void _eventClearCart(BuildContext rootContext) {
+    showDialog(
+      context: rootContext,
+      builder: (BuildContext context) {
+        return DialogConfirmation(
+          title: 'Confirmation',
+          content: 'Are you sure to clear cart?',
+          onYesTap: () {
+            _clearCartHandler(context);
+          },
+          onNoTap: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
+  void _clearCartHandler(BuildContext dialogContext) async {
     Map<String, dynamic> clearResult = await clearCarts();
     bool error = clearResult['error'] as bool;
     String message = clearResult['message'] as String;
     if (!error) {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(dialogContext);
       _initPage();
     }
   }

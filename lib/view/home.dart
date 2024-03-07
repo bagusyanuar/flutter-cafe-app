@@ -8,6 +8,7 @@ import 'package:rye_coffee/components/modal.add.cart.dart';
 import 'package:rye_coffee/components/product.list.dart';
 import 'package:rye_coffee/components/chip.categories.dart';
 import 'package:rye_coffee/components/navbar.dart';
+import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/dummy/data.dart';
 import 'package:rye_coffee/helper/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +23,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedChipCategories = 0;
   int cartQty = 0;
+  List<Map<String, dynamic>> categoriesList = [];
+  List<Map<String, dynamic>> productsList = [];
+  bool isCategoriesLoading = true;
 
   @override
   void initState() {
@@ -58,7 +62,8 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ChipCategories(
-                          data: DummyCategories,
+                          onLoading: isCategoriesLoading,
+                          data: categoriesList,
                           selectedChip: selectedChipCategories,
                           onChipChange: ((key) {
                             setState(() {
@@ -68,16 +73,14 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Expanded(
                           child: ProductList(
+                            data: productsList,
+                            onRefresh: () async {
+                              log('on refresh menu');
+                            },
                             type: 'menu',
                             onCartTap: (id, name, price, image, type) {
                               _eventAppendCart(
-                                context,
-                                id,
-                                name,
-                                price,
-                                image,
-                                type,
-                              );
+                                  context, id, name, price, image, type);
                             },
                             onInfoTap: (id) {
                               log('info tapped ${id.toString()}');
@@ -111,6 +114,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initPage() async {
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      isCategoriesLoading = false;
+      categoriesList = DummyCategories;
+    });
     int countCart = await getCartCount();
     setState(() {
       cartQty = countCart;
