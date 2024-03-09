@@ -5,6 +5,8 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:rye_coffee/components/card.product.dart';
+import 'package:rye_coffee/components/product.list.content.dart';
+import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/dummy/data.dart';
 
 class ProductList extends StatelessWidget {
@@ -14,6 +16,7 @@ class ProductList extends StatelessWidget {
       onCartTap;
   final Function(int id) onInfoTap;
   final AsyncCallback onRefresh;
+  final bool onLoading;
 
   const ProductList({
     Key? key,
@@ -22,60 +25,28 @@ class ProductList extends StatelessWidget {
     required this.type,
     required this.onRefresh,
     required this.data,
+    required this.onLoading,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.infinity,
-      child: RefreshIndicator(
-        onRefresh: onRefresh,
-        child: data.isEmpty
-            ? Container(
-                height: double.infinity,
-                width: double.infinity,
-                // color: Colors.blue,
-                child: Center(
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 120,
-                          width: 120,
-                          margin: const EdgeInsets.only(bottom: 15),
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/no-data.png"),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            : GridView.count(
-                padding: const EdgeInsets.only(bottom: 60),
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 3 / 4,
-                children: data.map((e) {
-                  return CardProduct(
-                    image: e['image'].toString(),
-                    name: e['name'].toString(),
-                    price: e['price'] as int,
-                    id: e['id'] as int,
-                    type: type,
-                    onCartTap: onCartTap,
-                    onInfoTap: onInfoTap,
-                  );
-                }).toList(),
-              ),
-      ),
-    );
+    return onLoading
+        ? GridView.count(
+            padding: const EdgeInsets.only(bottom: 60),
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 3 / 4,
+            children: [1, 2, 3, 4, 5, 6].map((e) {
+              return const MyShimmer(height: 0, width: 0, radius: 10);
+            }).toList(),
+          )
+        : ProductListContent(
+            data: data,
+            type: type,
+            onCartTap: onCartTap,
+            onInfoTap: onInfoTap,
+            onRefresh: onRefresh,
+          );
   }
 }

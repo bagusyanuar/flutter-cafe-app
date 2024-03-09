@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> categoriesList = [];
   List<Map<String, dynamic>> productsList = [];
   bool isCategoriesLoading = true;
+  bool isProductsLoading = true;
 
   @override
   void initState() {
@@ -73,6 +74,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Expanded(
                           child: ProductList(
+                            onLoading: isProductsLoading,
                             data: productsList,
                             onRefresh: () async {
                               log('on refresh menu');
@@ -118,6 +120,11 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isCategoriesLoading = false;
       categoriesList = DummyCategories;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      isProductsLoading = false;
+      productsList = DummyProducts;
     });
     int countCart = await getCartCount();
     setState(() {
