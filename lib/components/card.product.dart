@@ -12,6 +12,8 @@ class CardProduct extends StatelessWidget {
   final Function(int id, String name, int price, String image, String type)
       onCartTap;
   final Function(int id) onInfoTap;
+  final Function(int id, String name, int price, String image, String type)
+      onTap;
   // final Function(int id) onCardTap;
 
   const CardProduct({
@@ -23,6 +25,7 @@ class CardProduct extends StatelessWidget {
     required this.onCartTap,
     required this.onInfoTap,
     required this.type,
+    required this.onTap,
     // required this.onCardTap,
   }) : super(key: key);
 
@@ -31,7 +34,7 @@ class CardProduct extends StatelessWidget {
     NumberFormat numberFormat = NumberFormat.decimalPattern('id');
     return GestureDetector(
       onTap: () {
-        // onCardTap(id);
+        onTap(id, name, price, image, type);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -104,59 +107,59 @@ class CardProduct extends StatelessWidget {
                         color: Colors.brown,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            onCartTap(id, name, price, image, type);
-                          },
-                          child: Container(
-                            height: 25,
-                            width: 25,
-                            margin: const EdgeInsets.only(right: 5),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.brown,
-                              ),
-                              color: Colors.white,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.shopping_bag,
-                                color: Colors.brown,
-                                size: 12,
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            onInfoTap(id);
-                          },
-                          child: Container(
-                            height: 25,
-                            width: 25,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.brown,
-                              ),
-                              color: Colors.white,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.info,
-                                color: Colors.brown,
-                                size: 12,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.end,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     GestureDetector(
+                    //       onTap: () {
+                    //         onCartTap(id, name, price, image, type);
+                    //       },
+                    //       child: Container(
+                    //         height: 25,
+                    //         width: 25,
+                    //         margin: const EdgeInsets.only(right: 5),
+                    //         decoration: BoxDecoration(
+                    //           shape: BoxShape.circle,
+                    //           border: Border.all(
+                    //             color: Colors.brown,
+                    //           ),
+                    //           color: Colors.white,
+                    //         ),
+                    //         child: const Center(
+                    //           child: Icon(
+                    //             Icons.shopping_bag,
+                    //             color: Colors.brown,
+                    //             size: 12,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     GestureDetector(
+                    //       onTap: () {
+                    //         onInfoTap(id);
+                    //       },
+                    //       child: Container(
+                    //         height: 25,
+                    //         width: 25,
+                    //         decoration: BoxDecoration(
+                    //           shape: BoxShape.circle,
+                    //           border: Border.all(
+                    //             color: Colors.brown,
+                    //           ),
+                    //           color: Colors.white,
+                    //         ),
+                    //         child: const Center(
+                    //           child: Icon(
+                    //             Icons.info,
+                    //             color: Colors.brown,
+                    //             size: 12,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // )
                   ],
                 ),
               ),

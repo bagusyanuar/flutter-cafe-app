@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:rye_coffee/components/button.floating.cart.dart';
 import 'package:rye_coffee/components/modal.add.cart.dart';
+import 'package:rye_coffee/components/modal/product.dart';
 import 'package:rye_coffee/components/product.list.dart';
 import 'package:rye_coffee/components/chip.categories.dart';
 import 'package:rye_coffee/components/navbar.dart';
@@ -76,6 +77,10 @@ class _HomePageState extends State<HomePage> {
                           child: ProductList(
                             onLoading: isProductsLoading,
                             data: productsList,
+                            onTap: (id, name, price, image, type) {
+                              _eventAppendCart(
+                                  context, id, name, price, image, type);
+                            },
                             onRefresh: () async {
                               log('on refresh menu');
                             },
@@ -140,18 +145,19 @@ class _HomePageState extends State<HomePage> {
     String image,
     String type,
   ) async {
-    Map<String, dynamic> eventResult =
-        await saveCartToStorage(id, name, price, 1, image, type);
-    bool error = eventResult['error'] as bool;
-    String message = eventResult['message'] as String;
-    if (!error) {
-      // ignore: use_build_context_synchronously
-      _showModalCart(rootContext, id, name, price, image, type);
-      int countCart = await getCartCount();
-      setState(() {
-        cartQty = countCart;
-      });
-    }
+    _showModalCart(rootContext, id, name, price, image, type);
+    // Map<String, dynamic> eventResult =
+    //     await saveCartToStorage(id, name, price, 1, image, type);
+    // bool error = eventResult['error'] as bool;
+    // String message = eventResult['message'] as String;
+    // if (!error) {
+    //   // ignore: use_build_context_synchronously
+
+    //   int countCart = await getCartCount();
+    //   setState(() {
+    //     cartQty = countCart;
+    //   });
+    // }
   }
 
   void _showModalCart(
@@ -172,19 +178,20 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       builder: (builder) {
-        return ModalAddToCart(
-          id: id,
-          name: name,
-          price: price,
-          image: image,
-          type: type,
-          onGoToCart: () {
-            log('go to cart');
-            Navigator.of(rootContext).pushNamed('/cart').then((value) {
-              _initPage();
-            });
-          },
-        );
+        return ModalProduct(id: id);
+        // return ModalAddToCart(
+        //   id: id,
+        //   name: name,
+        //   price: price,
+        //   image: image,
+        //   type: type,
+        //   onGoToCart: () {
+        //     log('go to cart');
+        //     Navigator.of(rootContext).pushNamed('/cart').then((value) {
+        //       _initPage();
+        //     });
+        //   },
+        // );
       },
     );
   }

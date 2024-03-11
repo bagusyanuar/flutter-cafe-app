@@ -11,6 +11,8 @@ class ProductListContent extends StatelessWidget {
       onCartTap;
   final Function(int id) onInfoTap;
   final AsyncCallback onRefresh;
+  final Function(int id, String name, int price, String image, String type)
+      onTap;
 
   const ProductListContent({
     Key? key,
@@ -19,6 +21,7 @@ class ProductListContent extends StatelessWidget {
     required this.onCartTap,
     required this.onInfoTap,
     required this.onRefresh,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -80,6 +83,7 @@ class ProductListContent extends StatelessWidget {
                     type: type,
                     onCartTap: onCartTap,
                     onInfoTap: onInfoTap,
+                    onTap: onTap,
                   );
                 }).toList(),
               ),

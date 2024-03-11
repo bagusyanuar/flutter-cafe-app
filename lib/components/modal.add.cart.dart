@@ -37,12 +37,9 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
   @override
   void initState() {
     // TODO: implement initState
-    textEditingController.text = '1';
+    textEditingController.text = '0';
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      log('test');
-      // _initCarts();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   @override
@@ -55,7 +52,7 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
+      height: MediaQuery.of(context).size.height * 0.7,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -85,77 +82,101 @@ class _ModalAddToCartState extends State<ModalAddToCart> {
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      String currentQtyString = textEditingController.text;
-                      int currentQty = int.parse(currentQtyString);
-                      if (currentQty > 1) {
-                        int nextQty = currentQty - 1;
-                        textEditingController.text = nextQty.toString();
-                        _onChangeQty();
-                      }
-                    },
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.brown,
-                        border: Border.all(width: 1, color: Colors.brown),
-                      ),
-                      child: const Icon(
-                        Icons.remove,
-                        color: Colors.white,
-                        size: 10,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 40,
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    child: TextField(
-                      controller: textEditingController,
-                      textAlign: TextAlign.center,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          contentPadding: const EdgeInsets.all(1)),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      String currentQtyString = textEditingController.text;
-                      int currentQty = int.parse(currentQtyString);
-                      if (currentQty <= 99) {
-                        int nextQty = currentQty + 1;
-                        textEditingController.text = nextQty.toString();
-                        _onChangeQty();
-                      }
-                    },
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.brown,
-                        border: Border.all(width: 1, color: Colors.brown),
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 10,
-                      ),
-                    ),
-                  ),
-                ],
-              )
             ],
+          ),
+          const Divider(),
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(child: Container()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Jumlah',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            String currentQtyString =
+                                textEditingController.text;
+                            int currentQty = int.parse(currentQtyString);
+                            if (currentQty > 1) {
+                              int nextQty = currentQty - 1;
+                              textEditingController.text = nextQty.toString();
+                              _onChangeQty();
+                            }
+                          },
+                          child: Container(
+                            height: 25,
+                            width: 25,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.brown,
+                              border: Border.all(width: 1, color: Colors.brown),
+                            ),
+                            child: const Icon(
+                              Icons.remove,
+                              color: Colors.white,
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 30,
+                          width: 40,
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          child: TextField(
+                            controller: textEditingController,
+                            textAlign: TextAlign.center,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                contentPadding: const EdgeInsets.all(1)),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            String currentQtyString =
+                                textEditingController.text;
+                            int currentQty = int.parse(currentQtyString);
+                            if (currentQty <= 99) {
+                              int nextQty = currentQty + 1;
+                              textEditingController.text = nextQty.toString();
+                              _onChangeQty();
+                            }
+                          },
+                          child: Container(
+                            height: 25,
+                            width: 25,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.brown,
+                              border: Border.all(width: 1, color: Colors.brown),
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
           const Divider(),
           GestureDetector(

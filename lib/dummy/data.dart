@@ -44,3 +44,48 @@ List<Map<String, dynamic>> DummyProducts = [
         'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg'
   },
 ];
+
+List<dynamic> DummyPackages = [
+  {
+    'id': 1,
+    'name': 'Americano',
+    'qty': 3,
+    'image':
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg'
+  },
+  {
+    'id': 1,
+    'name': 'Americano',
+    'qty': 3,
+    'image':
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg'
+  },
+  {
+    'id': 2,
+    'name': 'Americano',
+    'qty': 3,
+    'image':
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg'
+  },
+  {
+    'id': 4,
+    'name': 'Americano',
+    'qty': 3,
+    'image':
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg'
+  },
+  {
+    'id': 5,
+    'name': 'Americano',
+    'qty': 3,
+    'image':
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg'
+  },
+  {
+    'id': 6,
+    'name': 'Americano',
+    'qty': 3,
+    'image':
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg'
+  }
+];
