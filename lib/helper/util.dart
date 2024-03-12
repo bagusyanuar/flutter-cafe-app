@@ -204,3 +204,60 @@ Future<Map<String, dynamic>> removeCartItem(int index) async {
   }
   return result;
 }
+
+Future<Map<String, dynamic>> changeQtyStorageHandler(
+    int id, int qty, String type) async {
+  Map<String, dynamic> result = {'error': true, 'message': 'error change qty'};
+  try {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? carts = preferences.getString('carts');
+    if (carts != null) {
+      dynamic cartJSON = json.decode(carts);
+      if (cartJSON is List<dynamic>) {
+        Map<String, dynamic>? item = cartJSON.firstWhere(
+            (element) => (element['id'] == id && element['type'] == type),
+            orElse: () => null);
+        if (item != null) {
+          int itemIndex = cartJSON.indexOf(item);
+          if (qty > 0) {
+            item['qty'] = qty;
+            cartJSON[itemIndex] = item;
+          } else {
+            cartJSON.removeAt(itemIndex);
+          }
+          String newCartJSON = json.encode(cartJSON);
+          preferences.setString('carts', newCartJSON);
+          log(newCartJSON);
+          result = {'error': false, 'message': 'success change qty'};
+        } else {
+          Map<String, dynamic> tmpItem = {
+            'id': id,
+            'qty': qty,
+            'type': type,
+          };
+          cartJSON.add(tmpItem);
+          String newCartJSON = json.encode(cartJSON);
+          preferences.setString('carts', newCartJSON);
+          log(newCartJSON);
+          result = {'error': false, 'message': 'success change qty'};
+        }
+      }
+    } else {
+      log("cart not exists");
+      List<Map<String, dynamic>> tmpCarts = [];
+      Map<String, dynamic> tmpItem = {
+        'id': id,
+        'qty': qty,
+        'type': type,
+      };
+      tmpCarts.add(tmpItem);
+      String cartJSON = json.encode(tmpCarts);
+      preferences.setString('carts', cartJSON);
+      log(cartJSON);
+      result = {'error': false, 'message': 'success'};
+    }
+  } catch (e) {
+    result = {'error': true, 'message': e.toString()};
+  }
+  return result;
+}
