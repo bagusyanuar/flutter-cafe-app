@@ -9,12 +9,19 @@ import 'package:rye_coffee/components/modal/product.info.dart';
 import 'package:rye_coffee/components/modal/product.quantity.dart';
 import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/dummy/data.dart';
+import 'package:rye_coffee/helper/storage.dart';
 import 'package:rye_coffee/helper/util.dart';
+import 'package:rye_coffee/model/product.bundle.model.dart';
+import 'package:rye_coffee/model/product.model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ModalProduct extends StatefulWidget {
   final int id;
 
-  const ModalProduct({Key? key, required this.id}) : super(key: key);
+  const ModalProduct({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
 
   @override
   State<ModalProduct> createState() => _ModalProductState();
@@ -22,20 +29,26 @@ class ModalProduct extends StatefulWidget {
 
 class _ModalProductState extends State<ModalProduct> {
   TextEditingController textEditingController = TextEditingController();
-  String name = '';
-  int id = 0;
-  int price = 0;
-  String description = '';
-  String type = '';
-  List<dynamic> packages = [];
+  Product product = Product(
+    id: 0,
+    name: '',
+    image: '',
+    price: 0,
+    description: '',
+    type: 'menu',
+    items: [],
+  );
   bool onLoading = true;
 
   @override
   void initState() {
     // TODO: implement initState
     textEditingController.text = '0';
+    // _initPage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initPage();
+    });
     super.initState();
-    _initPage();
   }
 
   @override
@@ -60,8 +73,8 @@ class _ModalProductState extends State<ModalProduct> {
             Padding(
               padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
               child: ModalProductInfo(
-                name: name,
-                price: price,
+                name: product.name,
+                price: product.price,
                 onLoading: onLoading,
               ),
             ),
@@ -72,8 +85,8 @@ class _ModalProductState extends State<ModalProduct> {
             Flexible(
               child: ModalProductDescription(
                 onLoading: onLoading,
-                description: description,
-                packages: packages,
+                description: product.description,
+                packages: product.items,
                 scrollController: scrollController,
               ),
             ),
@@ -88,7 +101,8 @@ class _ModalProductState extends State<ModalProduct> {
                 textEditingController: textEditingController,
                 onQtyChange: (qtyString) {
                   textEditingController.text = qtyString;
-                  _onQtyChange(qtyString);
+                  int qty = int.parse(qtyString);
+                  _onQtyChange(product, qty);
                 },
               ),
             ),
@@ -133,22 +147,40 @@ class _ModalProductState extends State<ModalProduct> {
   }
 
   void _initPage() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      onLoading = false;
-      name = 'Esspresso';
-      price = 15000;
-      description = 'lorem ipsum color de sit amor';
-      packages = DummyPackages;
-      id = 1;
-      type = 'menu';
-    });
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      dynamic p = dummyProductsDynamic.firstWhere(
+          (element) =>
+              (element['id'] == widget.id && element['type'] == 'menu'),
+          orElse: () => null);
+
+      if (p != null) {
+        Product tmpProduct = Product(
+          id: p['id'] as int,
+          name: p['name'] as String,
+          image: p['image'] as String,
+          price: p['price'] as int,
+          description: p['description'] as String,
+          type: p['type'] as String,
+          items: [],
+        );
+        setState(() {
+          product = tmpProduct;
+          onLoading = false;
+        });
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.remove('carts');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
-  void _onQtyChange(String qtyString) async {
-    int qty = int.parse(qtyString);
-    Map<String, dynamic> resultChange =
-        await changeQtyStorageHandler(id, qty, type);
-    log(resultChange.toString());
+  void _onQtyChange(Product product, int qty) async {
+    bool value = await isStoragedCartChange(product, qty);
+    // int qty = int.parse(qtyString);
+    // Map<String, dynamic> resultChange =
+    //     await changeQtyStorageHandler(id, qty, type);
+    // log(resultChange.toString());
   }
 }

@@ -4,14 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:rye_coffee/components/button.floating.cart.dart';
+import 'package:rye_coffee/components/chip/categories.chip.dart';
 import 'package:rye_coffee/components/modal.add.cart.dart';
 import 'package:rye_coffee/components/modal/product.dart';
 import 'package:rye_coffee/components/product.list.dart';
 import 'package:rye_coffee/components/chip.categories.dart';
 import 'package:rye_coffee/components/navbar.dart';
+import 'package:rye_coffee/components/product/product.wrapper.dart';
 import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/dummy/data.dart';
+import 'package:rye_coffee/helper/storage.dart';
 import 'package:rye_coffee/helper/util.dart';
+import 'package:rye_coffee/model/category.model.dart';
+import 'package:rye_coffee/model/product.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,6 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Category> categories = [];
+  List<Product> products = [];
   int selectedChipCategories = 0;
   int cartQty = 0;
   List<Map<String, dynamic>> categoriesList = [];
@@ -63,37 +70,49 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ChipCategories(
-                          onLoading: isCategoriesLoading,
-                          data: categoriesList,
+                        CategoriesChip(
+                          data: categories,
                           selectedChip: selectedChipCategories,
-                          onChipChange: ((key) {
+                          onLoading: isCategoriesLoading,
+                          onChipChange: (key, id, type) {
                             setState(() {
                               selectedChipCategories = key;
                             });
-                          }),
+                          },
                         ),
                         Expanded(
-                          child: ProductList(
+                          child: ProductsWrapper(
+                            data: products,
                             onLoading: isProductsLoading,
-                            data: productsList,
-                            onTap: (id, name, price, image, type) {
-                              _eventAppendCart(
-                                  context, id, name, price, image, type);
-                            },
-                            onRefresh: () async {
-                              log('on refresh menu');
-                            },
-                            type: 'menu',
-                            onCartTap: (id, name, price, image, type) {
-                              _eventAppendCart(
-                                  context, id, name, price, image, type);
-                            },
-                            onInfoTap: (id) {
-                              log('info tapped ${id.toString()}');
+                            onRefresh: () async {},
+                            onCardTap: (product) {
+                              // dynamic m = StorageMapper.productToMap(product);
+                              // log(m.toString());
+                              _showModalCart(context, product.id);
                             },
                           ),
-                        ),
+                        )
+                        // Expanded(
+                        //   child: ProductList(
+                        //     onLoading: isProductsLoading,
+                        //     data: productsList,
+                        //     onTap: (id, name, price, image, type) {
+                        //       _eventAppendCart(
+                        //           context, id, name, price, image, type);
+                        //     },
+                        //     onRefresh: () async {
+                        //       log('on refresh menu');
+                        //     },
+                        //     type: 'menu',
+                        //     onCartTap: (id, name, price, image, type) {
+                        //       _eventAppendCart(
+                        //           context, id, name, price, image, type);
+                        //     },
+                        //     onInfoTap: (id) {
+                        //       log('info tapped ${id.toString()}');
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -124,12 +143,13 @@ class _HomePageState extends State<HomePage> {
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
       isCategoriesLoading = false;
-      categoriesList = DummyCategories;
+      categories =
+          dummyCategoriesDynamic.map((e) => Category.fromJson(e)).toList();
     });
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
       isProductsLoading = false;
-      productsList = DummyProducts;
+      products = dummyProductsDynamic.map((e) => Product.fromJson(e)).toList();
     });
     int countCart = await getCartCount();
     setState(() {
@@ -137,37 +157,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _eventAppendCart(
-    BuildContext rootContext,
-    int id,
-    String name,
-    int price,
-    String image,
-    String type,
-  ) async {
-    _showModalCart(rootContext, id, name, price, image, type);
-    // Map<String, dynamic> eventResult =
-    //     await saveCartToStorage(id, name, price, 1, image, type);
-    // bool error = eventResult['error'] as bool;
-    // String message = eventResult['message'] as String;
-    // if (!error) {
-    //   // ignore: use_build_context_synchronously
-
-    //   int countCart = await getCartCount();
-    //   setState(() {
-    //     cartQty = countCart;
-    //   });
-    // }
+  void _eventAppendCart(BuildContext rootContext, int id) async {
+    _showModalCart(rootContext, id);
   }
 
-  void _showModalCart(
-    BuildContext rootContext,
-    int id,
-    String name,
-    int price,
-    String image,
-    String type,
-  ) {
+  void _showModalCart(BuildContext rootContext, int id) {
     showModalBottomSheet(
       context: rootContext,
       isScrollControlled: true,
@@ -179,19 +173,6 @@ class _HomePageState extends State<HomePage> {
       ),
       builder: (builder) {
         return ModalProduct(id: id);
-        // return ModalAddToCart(
-        //   id: id,
-        //   name: name,
-        //   price: price,
-        //   image: image,
-        //   type: type,
-        //   onGoToCart: () {
-        //     log('go to cart');
-        //     Navigator.of(rootContext).pushNamed('/cart').then((value) {
-        //       _initPage();
-        //     });
-        //   },
-        // );
       },
     );
   }
