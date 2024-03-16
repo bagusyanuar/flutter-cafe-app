@@ -8,7 +8,9 @@ import 'package:rye_coffee/components/card.cart.dart';
 import 'package:rye_coffee/components/dialog.confirmation.dart';
 import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/components/top.navbar.dart';
+import 'package:rye_coffee/helper/storage.dart';
 import 'package:rye_coffee/helper/util.dart';
+import 'package:rye_coffee/model/cart.model.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CartPage extends StatefulWidget {
@@ -22,6 +24,8 @@ class _CartPageState extends State<CartPage> {
   NumberFormat numberFormat = NumberFormat.decimalPattern('id');
   List<dynamic> dataCart = [];
   int totalPrice = 0, totalPoint = 0;
+  bool isLoading = true;
+  List<Cart> carts = [];
 
   @override
   void initState() {
@@ -74,26 +78,21 @@ class _CartPageState extends State<CartPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: dataCart.map((e) {
-                        int cartIndex = dataCart.indexOf(e);
-                        int id = e['id'] as int;
-                        String name = e['name'] as String;
-                        int price = e['price'] as int;
-                        int qty = e['qty'] as int;
-                        String image = e['image'] as String;
+                      children: carts.map((item) {
+                        int cartIndex = carts.indexOf(item);
+                        // int id = e['id'] as int;
+                        // String name = e['name'] as String;
+                        // int price = e['price'] as int;
+                        // int qty = e['qty'] as int;
+                        // String image = e['image'] as String;
                         return CardCart(
-                          id: id,
-                          name: name,
-                          qty: qty,
-                          price: price,
-                          image: image,
-                          type: 'menu',
+                          item: item,
                           cartIndex: cartIndex,
                           onChangeQty: () {
-                            _getSummaryCart();
+                            // _getSummaryCart();
                           },
                           onRemoveItem: () {
-                            _initPage();
+                            // _initPage();
                           },
                         );
                       }).toList(),
@@ -148,10 +147,18 @@ class _CartPageState extends State<CartPage> {
   }
 
   void _initPage() async {
-    List<dynamic> cartStorage = await getCartStorage();
     setState(() {
-      dataCart = cartStorage;
+      isLoading = true;
     });
-    _getSummaryCart();
+    List<Cart> cartStorage = await getCart();
+    setState(() {
+      isLoading = false;
+      carts = cartStorage;
+    });
+    // List<dynamic> cartStorage = await getCartStorage();
+    // setState(() {
+    //   dataCart = cartStorage;
+    // });
+    // _getSummaryCart();
   }
 }

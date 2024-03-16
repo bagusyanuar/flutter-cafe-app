@@ -92,27 +92,6 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                         )
-                        // Expanded(
-                        //   child: ProductList(
-                        //     onLoading: isProductsLoading,
-                        //     data: productsList,
-                        //     onTap: (id, name, price, image, type) {
-                        //       _eventAppendCart(
-                        //           context, id, name, price, image, type);
-                        //     },
-                        //     onRefresh: () async {
-                        //       log('on refresh menu');
-                        //     },
-                        //     type: 'menu',
-                        //     onCartTap: (id, name, price, image, type) {
-                        //       _eventAppendCart(
-                        //           context, id, name, price, image, type);
-                        //     },
-                        //     onInfoTap: (id) {
-                        //       log('info tapped ${id.toString()}');
-                        //     },
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -140,6 +119,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initPage() async {
+    log('re init');
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
       isCategoriesLoading = false;
@@ -157,8 +137,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _eventAppendCart(BuildContext rootContext, int id) async {
-    _showModalCart(rootContext, id);
+  void onCartChanged(int count) async {
+    log('cart changed');
+    setState(() {
+      cartQty = count;
+    });
   }
 
   void _showModalCart(BuildContext rootContext, int id) {
@@ -172,7 +155,10 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       builder: (builder) {
-        return ModalProduct(id: id);
+        return ModalProduct(
+          id: id,
+          onCartChanged: (count) => onCartChanged(count),
+        );
       },
     );
   }

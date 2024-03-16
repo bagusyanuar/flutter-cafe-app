@@ -6,26 +6,29 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:rye_coffee/components/dialog.confirmation.dart';
 import 'package:rye_coffee/helper/util.dart';
+import 'package:rye_coffee/model/cart.model.dart';
 
 class CardCart extends StatefulWidget {
-  final int id;
-  final String name;
-  final int qty;
-  final int price;
-  final String image;
-  final String type;
+  // final int id;
+  // final String name;
+  // final int qty;
+  // final int price;
+  // final String image;
+  // final String type;
+  final Cart item;
   final int cartIndex;
   final VoidCallback onChangeQty;
   final VoidCallback onRemoveItem;
 
   const CardCart({
     Key? key,
-    required this.id,
-    required this.name,
-    required this.qty,
-    required this.price,
-    required this.image,
-    required this.type,
+    // required this.id,
+    // required this.name,
+    // required this.qty,
+    // required this.price,
+    // required this.image,
+    // required this.type,
+    required this.item,
     required this.onChangeQty,
     required this.cartIndex,
     required this.onRemoveItem,
@@ -42,7 +45,7 @@ class _CardCartState extends State<CardCart> {
   @override
   void initState() {
     // TODO: implement initState
-    textEditingController.text = widget.qty.toString();
+    textEditingController.text = widget.item.qty.toString();
     super.initState();
   }
 
@@ -83,7 +86,7 @@ class _CardCartState extends State<CardCart> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: NetworkImage(widget.image),
+                image: NetworkImage(widget.item.image),
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
@@ -100,14 +103,14 @@ class _CardCartState extends State<CardCart> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.name,
+                        widget.item.name,
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black54,
                         ),
                       ),
                       Text(
-                        'Rp${numberFormat.format(widget.price)}',
+                        'Rp${numberFormat.format(widget.item.price)}',
                         style: const TextStyle(
                           fontSize: 20,
                           color: Colors.brown,
@@ -204,14 +207,14 @@ class _CardCartState extends State<CardCart> {
   }
 
   void _onChangeQty() async {
-    int newQty = int.parse(textEditingController.text);
-    Map<String, dynamic> changeResult =
-        await changeQtyCartStorage(widget.id, widget.type, newQty);
-    bool error = changeResult['error'] as bool;
-    String message = changeResult['message'] as String;
-    if (error) {
-      log(message);
-    }
+    // int newQty = int.parse(textEditingController.text);
+    // Map<String, dynamic> changeResult =
+    //     await changeQtyCartStorage(widget.item.id, widget.type, newQty);
+    // bool error = changeResult['error'] as bool;
+    // String message = changeResult['message'] as String;
+    // if (error) {
+    //   log(message);
+    // }
   }
 
   void _eventRemoveItemCart(BuildContext rootContext, int cartIndex) {

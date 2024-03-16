@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,10 +18,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ModalProduct extends StatefulWidget {
   final int id;
+  final Function(int count) onCartChanged;
 
   const ModalProduct({
     Key? key,
     required this.id,
+    required this.onCartChanged,
   }) : super(key: key);
 
   @override
@@ -43,7 +46,7 @@ class _ModalProductState extends State<ModalProduct> {
   @override
   void initState() {
     // TODO: implement initState
-    textEditingController.text = '0';
+
     // _initPage();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initPage();
@@ -164,12 +167,18 @@ class _ModalProductState extends State<ModalProduct> {
           type: p['type'] as String,
           items: [],
         );
+        //init exists selected product on cart
+        Map<String, dynamic> itemOnCart = await isProductOnCart(tmpProduct);
+        if (itemOnCart['status']) {
+          int tmpQty = itemOnCart['qty'] as int;
+          textEditingController.text = tmpQty.toString();
+        } else {
+          textEditingController.text = '0';
+        }
         setState(() {
           product = tmpProduct;
           onLoading = false;
         });
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        preferences.remove('carts');
       }
     } catch (e) {
       log(e.toString());
@@ -177,10 +186,10 @@ class _ModalProductState extends State<ModalProduct> {
   }
 
   void _onQtyChange(Product product, int qty) async {
-    bool value = await isStoragedCartChange(product, qty);
-    // int qty = int.parse(qtyString);
-    // Map<String, dynamic> resultChange =
-    //     await changeQtyStorageHandler(id, qty, type);
-    // log(resultChange.toString());
+    Map<String, dynamic> value = await isStoragedCartChange(product, qty);
+    if (value['value']) {
+      int count = value['count'] as int;
+      widget.onCartChanged(count);
+    }
   }
 }
