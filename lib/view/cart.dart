@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
-import 'package:rye_coffee/components/card.cart.dart';
+import 'package:rye_coffee/components/cart/cart.dart';
+import 'package:rye_coffee/components/cart/cart.summary.dart';
+import 'package:rye_coffee/components/cart/wrapper.dart';
 import 'package:rye_coffee/components/dialog.confirmation.dart';
+import 'package:rye_coffee/components/filler/empty.content.dart';
 import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/components/top.navbar.dart';
 import 'package:rye_coffee/helper/storage.dart';
@@ -42,6 +45,7 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
+    double safePadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -63,44 +67,72 @@ class _CartPageState extends State<CartPage> {
                 _eventClearCart(context);
               },
             ),
-            Flexible(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  log('refreshed');
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: carts.map((item) {
-                        int cartIndex = carts.indexOf(item);
-                        // int id = e['id'] as int;
-                        // String name = e['name'] as String;
-                        // int price = e['price'] as int;
-                        // int qty = e['qty'] as int;
-                        // String image = e['image'] as String;
-                        return CardCart(
-                          item: item,
-                          cartIndex: cartIndex,
-                          onChangeQty: () {
-                            // _getSummaryCart();
-                          },
-                          onRemoveItem: () {
-                            // _initPage();
-                          },
-                        );
-                      }).toList(),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  double height = constraints.maxHeight;
+                  return RefreshIndicator(
+                    child: SizedBox(
+                      height: height,
+                      width: double.infinity,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          child: CartListWrapper(onLoading: true),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                    onRefresh: () async {},
+                  );
+                },
               ),
             ),
+            CardSummary(
+              onLoading: isLoading,
+              totalPoint: 0,
+              totalPrice: 0,
+            )
+
+            // Flexible(
+            //   child: RefreshIndicator(
+            //     onRefresh: () async {
+            //       log('refreshed');
+            //     },
+            //     child: Container(
+            //       padding:
+            //           const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            //       height: double.infinity,
+            //       width: double.infinity,
+            //       child: SingleChildScrollView(
+            //         physics: const AlwaysScrollableScrollPhysics(),
+            //         child: Column(
+            //           mainAxisAlignment: MainAxisAlignment.start,
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: carts.map((item) {
+            //             int cartIndex = carts.indexOf(item);
+            //             // int id = e['id'] as int;
+            //             // String name = e['name'] as String;
+            //             // int price = e['price'] as int;
+            //             // int qty = e['qty'] as int;
+            //             // String image = e['image'] as String;
+            //             return CardCart(
+            //               item: item,
+            //               cartIndex: cartIndex,
+            //               onChangeQty: () {
+            //                 // _getSummaryCart();
+            //               },
+            //               onRemoveItem: () {
+            //                 // _initPage();
+            //               },
+            //             );
+            //           }).toList(),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -150,15 +182,9 @@ class _CartPageState extends State<CartPage> {
     setState(() {
       isLoading = true;
     });
-    List<Cart> cartStorage = await getCart();
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       isLoading = false;
-      carts = cartStorage;
     });
-    // List<dynamic> cartStorage = await getCartStorage();
-    // setState(() {
-    //   dataCart = cartStorage;
-    // });
-    // _getSummaryCart();
   }
 }
