@@ -161,6 +161,41 @@ Future<List<Cart>> getCart() async {
   return values;
 }
 
+Future<Map<String, int>> getSummaryCart() async {
+  Map<String, int> value = {
+    "total_price": 0,
+    "total_point": 0,
+  };
+  try {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? carts = preferences.getString('carts');
+    if (carts != null) {
+      dynamic currentCartJSON = json.decode(carts);
+      if (currentCartJSON is List<dynamic>) {
+        List<Cart> cartValues = StorageMapper.cartFromJSON(currentCartJSON);
+        int totalPoint = 0;
+        int totalPrice = 0;
+        for (var element in cartValues) {
+          if (element.type == "menu") {
+            totalPrice += (element.price * element.qty);
+          }
+
+          if (element.type == "package") {
+            totalPoint += (element.price * element.qty);
+          }
+        }
+        value = {
+          "total_price": totalPrice,
+          "total_point": totalPoint,
+        };
+      }
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+  return value;
+}
+
 _addToCartStorage(
     SharedPreferences preferences, List<dynamic> currentCarts, Cart cart) {
   dynamic cartItem = StorageMapper.cartToMap(cart);

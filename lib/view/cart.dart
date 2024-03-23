@@ -80,7 +80,17 @@ class _CartPageState extends State<CartPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 20),
-                          child: CartListWrapper(onLoading: true),
+                          child: CartListWrapper(
+                            onLoading: isLoading,
+                            carts: carts,
+                            onQtyChange: () {
+                              _eventSummaryChange();
+                            },
+                            onItemRemove: () async {
+                              log('reload cart');
+                              _initPage();
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -91,48 +101,9 @@ class _CartPageState extends State<CartPage> {
             ),
             CardSummary(
               onLoading: isLoading,
-              totalPoint: 0,
-              totalPrice: 0,
+              totalPoint: totalPoint,
+              totalPrice: totalPrice,
             )
-
-            // Flexible(
-            //   child: RefreshIndicator(
-            //     onRefresh: () async {
-            //       log('refreshed');
-            //     },
-            //     child: Container(
-            //       padding:
-            //           const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            //       height: double.infinity,
-            //       width: double.infinity,
-            //       child: SingleChildScrollView(
-            //         physics: const AlwaysScrollableScrollPhysics(),
-            //         child: Column(
-            //           mainAxisAlignment: MainAxisAlignment.start,
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: carts.map((item) {
-            //             int cartIndex = carts.indexOf(item);
-            //             // int id = e['id'] as int;
-            //             // String name = e['name'] as String;
-            //             // int price = e['price'] as int;
-            //             // int qty = e['qty'] as int;
-            //             // String image = e['image'] as String;
-            //             return CardCart(
-            //               item: item,
-            //               cartIndex: cartIndex,
-            //               onChangeQty: () {
-            //                 // _getSummaryCart();
-            //               },
-            //               onRemoveItem: () {
-            //                 // _initPage();
-            //               },
-            //             );
-            //           }).toList(),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -168,23 +139,33 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  void _getSummaryCart() async {
-    Map<String, int> result = await getSummaryCarts();
-    int resultPrice = result['price'] as int;
-    int resultPoint = result['point'] as int;
+  void _eventSummaryChange() async {
+    Map<String, int> summary = await getSummaryCart();
+    int tPrice = summary["total_price"] as int;
+    int tPoint = summary["total_point"] as int;
     setState(() {
-      totalPrice = resultPrice;
-      totalPoint = resultPoint;
+      totalPoint = tPoint;
+      totalPrice = tPrice;
     });
   }
 
   void _initPage() async {
     setState(() {
       isLoading = true;
+      carts = [];
+      totalPoint = 0;
+      totalPrice = 0;
     });
     await Future.delayed(const Duration(seconds: 2));
+    List<Cart> cartList = await getCart();
+    Map<String, int> summary = await getSummaryCart();
+    int tPrice = summary["total_price"] as int;
+    int tPoint = summary["total_point"] as int;
     setState(() {
       isLoading = false;
+      carts = cartList;
+      totalPoint = tPoint;
+      totalPrice = tPrice;
     });
   }
 }
