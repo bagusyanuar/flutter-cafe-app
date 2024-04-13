@@ -62,7 +62,11 @@ class TopNavbar extends StatelessWidget {
           ),
           GestureDetector(
             onTap: onActionTap,
-            child: actionButton ?? Container(),
+            child: actionButton ??
+                const SizedBox(
+                  width: 45,
+                  height: 45,
+                ),
           ),
         ],
       ),

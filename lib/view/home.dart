@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:rye_coffee/components/button.floating.cart.dart';
 import 'package:rye_coffee/components/chip/categories.chip.dart';
+import 'package:rye_coffee/components/drawer/drawer.dart';
 import 'package:rye_coffee/components/modal.add.cart.dart';
 import 'package:rye_coffee/components/modal/product.dart';
 import 'package:rye_coffee/components/product.list.dart';
@@ -114,6 +115,28 @@ class _HomePageState extends State<HomePage> {
             ),
           )
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (value) {
+          switch (value) {
+            case 1:
+              Navigator.pushNamed(context, "/order");
+              break;
+            case 2:
+              Navigator.pushNamed(context, "/profil");
+              break;
+            default:
+          }
+        },
+        fixedColor: Colors.brown,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Beranda"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long), label: "Pesanan"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle), label: "Profil"),
+        ],
+        currentIndex: 0,
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:rye_coffee/model/order.model.dart';
+
 List<Map<String, dynamic>> DummyCategories = [
   {'id': 1, 'name': 'Coffee Based', 'type': 'menu'},
   {'id': 2, 'name': 'Non Coffee', 'type': 'menu'},
@@ -155,4 +157,34 @@ const List<dynamic> dummyProductsDynamic = [
     'type': 'menu',
     'items': []
   },
+];
+
+List<Order> dummyOrderList = [
+  Order(
+      id: 1,
+      image:
+          'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
+      date: '2024-01-01',
+      orderNumber: 'RYE-0001',
+      price: 10000,
+      point: 10,
+      status: 1),
+  Order(
+      id: 2,
+      image:
+          'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
+      date: '2024-01-02',
+      orderNumber: 'RYE-0002',
+      price: 25000,
+      point: 10,
+      status: 2),
+  Order(
+      id: 3,
+      image:
+          'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
+      date: '2024-01-03',
+      orderNumber: 'RYE-0003',
+      price: 25000,
+      point: 10,
+      status: 3),
 ];

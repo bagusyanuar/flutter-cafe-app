@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rye_coffee/view/cart.dart';
 import 'package:rye_coffee/view/home.dart';
 import 'package:rye_coffee/view/login.dart';
+import 'package:rye_coffee/view/order.dart';
+import 'package:rye_coffee/view/order.detail.dart';
 import 'package:rye_coffee/view/register.dart';
 import 'package:rye_coffee/view/splash.dart';
 
@@ -27,6 +29,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/cart': (context) => const CartPage(),
+        '/order': (context) => const OrderPage(),
+        '/order/detail': (context) => const OrderDetailPage(),
         // '/dashboard': (context) => Dashboard(),
         // '/order': (context) => OrderView(),
         // '/cart': (context) => CartView(),
