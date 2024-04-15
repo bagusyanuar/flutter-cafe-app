@@ -1,3 +1,4 @@
+import 'package:rye_coffee/model/cart.model.dart';
 import 'package:rye_coffee/model/order.model.dart';
 
 List<Map<String, dynamic>> DummyCategories = [
@@ -161,30 +162,124 @@ const List<dynamic> dummyProductsDynamic = [
 
 List<Order> dummyOrderList = [
   Order(
-      id: 1,
-      image:
-          'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
-      date: '2024-01-01',
-      orderNumber: 'RYE-0001',
-      price: 10000,
-      point: 10,
-      status: 1),
+    id: 1,
+    image:
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
+    date: '2024-01-01',
+    orderNumber: 'RYE-0001',
+    price: 10000,
+    point: 10,
+    status: 1,
+    carts: [
+      Cart(
+        id: 1,
+        name: "item 1",
+        image:
+            "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+        price: 15000,
+        qty: 1,
+        type: 'menu',
+      ),
+      Cart(
+        id: 2,
+        name: "item 2",
+        image:
+            "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+        price: 25000,
+        qty: 1,
+        type: 'menu',
+      )
+    ],
+  ),
   Order(
-      id: 2,
-      image:
-          'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
-      date: '2024-01-02',
-      orderNumber: 'RYE-0002',
-      price: 25000,
-      point: 10,
-      status: 2),
+    id: 2,
+    image:
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
+    date: '2024-01-02',
+    orderNumber: 'RYE-0002',
+    price: 25000,
+    point: 10,
+    status: 2,
+    carts: [
+      Cart(
+        id: 1,
+        name: "item 1",
+        image:
+            "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+        price: 15000,
+        qty: 1,
+        type: 'menu',
+      ),
+      Cart(
+        id: 2,
+        name: "item 2",
+        image:
+            "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+        price: 25000,
+        qty: 1,
+        type: 'menu',
+      )
+    ],
+  ),
   Order(
-      id: 3,
-      image:
-          'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
-      date: '2024-01-03',
-      orderNumber: 'RYE-0003',
-      price: 25000,
-      point: 10,
-      status: 3),
+    id: 3,
+    image:
+        'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
+    date: '2024-01-03',
+    orderNumber: 'RYE-0003',
+    price: 25000,
+    point: 10,
+    status: 3,
+    carts: [
+      Cart(
+        id: 1,
+        name: "item 1",
+        image:
+            "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+        price: 15000,
+        qty: 1,
+        type: 'menu',
+      ),
+      Cart(
+        id: 2,
+        name: "item 2",
+        image:
+            "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+        price: 25000,
+        qty: 1,
+        type: 'menu',
+      )
+    ],
+  ),
 ];
+
+Order dummyOrder = Order(
+  id: 1,
+  image:
+      'https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg',
+  date: '2024-01-01',
+  orderNumber: 'RYE-0001',
+  price: 10000,
+  point: 10,
+  status: 1,
+  carts: [
+    Cart(
+      id: 1,
+      name: "Cappucino",
+      image:
+          "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+      price: 15000,
+      qty: 1,
+      type: 'menu',
+    ),
+    Cart(
+      id: 2,
+      name: "French Fries",
+      image:
+          "https://ayomakan.oss-ap-southeast-5.aliyuncs.com/article/ARTICLE-AYOMAKAN_20231103140453.jpg",
+      price: 25000,
+      qty: 1,
+      type: 'package',
+    )
+  ],
+);

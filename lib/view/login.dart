@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:rye_coffee/components/button.login.dart';
 import 'package:rye_coffee/components/passwordfield.login.dart';
 import 'package:rye_coffee/components/textfield.login.dart';
+import 'package:rye_coffee/controller/login.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,6 +17,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool onLoading = false;
+  String username = "";
+  String password = "";
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +45,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextFieldLogin(
                 onChange: (val) {
-                  log(val);
+                  setState(() {
+                    username = val;
+                  });
                 },
                 margin: const EdgeInsets.only(bottom: 10),
               ),
               PasswordFieldLogin(
                 onChange: (val) {
-                  log(val);
+                  setState(() {
+                    password = val;
+                  });
                 },
                 margin: const EdgeInsets.only(bottom: 20),
                 placeholder: 'password',
@@ -100,11 +107,16 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       onLoading = true;
     });
-    await Future.delayed(const Duration(seconds: 2));
+    LoginRequest request = LoginRequest(username: username, password: password);
+    LoginResponse response = await loginController(request);
     setState(() {
       onLoading = false;
     });
-    // ignore: use_build_context_synchronously
-    Navigator.of(context).popAndPushNamed('/home');
+    if (!response.error) {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).popAndPushNamed('/home');
+    } else {
+      log(response.message);
+    }
   }
 }

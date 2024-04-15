@@ -9,6 +9,7 @@ import 'package:rye_coffee/components/modal/product.description.dart';
 import 'package:rye_coffee/components/modal/product.info.dart';
 import 'package:rye_coffee/components/modal/product.quantity.dart';
 import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
+import 'package:rye_coffee/controller/product.dart';
 import 'package:rye_coffee/dummy/data.dart';
 import 'package:rye_coffee/helper/storage.dart';
 import 'package:rye_coffee/helper/util.dart';
@@ -150,35 +151,33 @@ class _ModalProductState extends State<ModalProduct> {
   }
 
   void _initPage() async {
+    setState(() {
+      onLoading = true;
+    });
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      dynamic p = dummyProductsDynamic.firstWhere(
-          (element) =>
-              (element['id'] == widget.id && element['type'] == 'menu'),
-          orElse: () => null);
-
-      if (p != null) {
-        Product tmpProduct = Product(
-          id: p['id'] as int,
-          name: p['name'] as String,
-          image: p['image'] as String,
-          price: p['price'] as int,
-          description: p['description'] as String,
-          type: p['type'] as String,
-          items: [],
-        );
-        //init exists selected product on cart
-        Map<String, dynamic> itemOnCart = await isProductOnCart(tmpProduct);
-        if (itemOnCart['status']) {
-          int tmpQty = itemOnCart['qty'] as int;
-          textEditingController.text = tmpQty.toString();
-        } else {
-          textEditingController.text = '0';
+      // await Future.delayed(const Duration(seconds: 2));
+      // dynamic p = dummyProductsDynamic.firstWhere(
+      //     (element) =>
+      //         (element['id'] == widget.id && element['type'] == 'menu'),
+      //     orElse: () => null);
+      ProductByIDResponse productByIDResponse =
+          await fetchProductByID(widget.id, 'menu');
+      log(productByIDResponse.message);
+      if (!productByIDResponse.error) {
+        Product? p = productByIDResponse.data;
+        if (p != null) {
+          Map<String, dynamic> itemOnCart = await isProductOnCart(p);
+          if (itemOnCart['status']) {
+            int tmpQty = itemOnCart['qty'] as int;
+            textEditingController.text = tmpQty.toString();
+          } else {
+            textEditingController.text = '0';
+          }
+          setState(() {
+            product = p;
+            onLoading = false;
+          });
         }
-        setState(() {
-          product = tmpProduct;
-          onLoading = false;
-        });
       }
     } catch (e) {
       log(e.toString());

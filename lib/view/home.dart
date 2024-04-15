@@ -13,6 +13,8 @@ import 'package:rye_coffee/components/chip.categories.dart';
 import 'package:rye_coffee/components/navbar.dart';
 import 'package:rye_coffee/components/product/product.wrapper.dart';
 import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
+import 'package:rye_coffee/controller/category.dart';
+import 'package:rye_coffee/controller/product.dart';
 import 'package:rye_coffee/dummy/data.dart';
 import 'package:rye_coffee/helper/storage.dart';
 import 'package:rye_coffee/helper/util.dart';
@@ -142,18 +144,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initPage() async {
-    log('re init');
-    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       isCategoriesLoading = false;
-      categories =
-          dummyCategoriesDynamic.map((e) => Category.fromJson(e)).toList();
     });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      isProductsLoading = false;
-      products = dummyProductsDynamic.map((e) => Product.fromJson(e)).toList();
-    });
+
+    //fetch category list
+    CategoryResponse categoryResponse = await fetchCategoryList();
+    if (!categoryResponse.error) {
+      Category selectedCategory = categoryResponse.data.first;
+      setState(() {
+        categories = categoryResponse.data;
+      });
+
+      //fetch product list by selected ctegory
+      ProductResponse productResponse =
+          await fetchProductList(selectedCategory.id);
+      if (!productResponse.error) {
+        setState(() {
+          products = productResponse.data;
+          isProductsLoading = false;
+        });
+      }
+    }
     int countCart = await getCartCount();
     setState(() {
       cartQty = countCart;
