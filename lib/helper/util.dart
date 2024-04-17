@@ -110,28 +110,6 @@ Future<int> getCartCount() async {
   return result;
 }
 
-Future<Map<String, dynamic>> clearCarts() async {
-  Map<String, dynamic> result = {'error': true, 'message': 'error clear cart'};
-  try {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? carts = preferences.getString('carts');
-    if (carts != null) {
-      dynamic cartJSON = json.decode(carts);
-      if (cartJSON is List<dynamic>) {
-        cartJSON.clear();
-        String newCartJSON = json.encode(cartJSON);
-        preferences.setString('carts', newCartJSON);
-        result = {'error': false, 'message': 'success clear cart'};
-      } else {
-        result = {'error': true, 'message': 'error cart not as list type'};
-      }
-    }
-  } catch (e) {
-    result = {'error': true, 'message': e.toString()};
-  }
-  return result;
-}
-
 Future<List<dynamic>> getCartStorage() async {
   List<dynamic> results = [];
   try {

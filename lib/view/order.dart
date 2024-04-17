@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:rye_coffee/components/order/wrapper.dart';
 import 'package:rye_coffee/components/top.navbar.dart';
+import 'package:rye_coffee/controller/order.dart';
 import 'package:rye_coffee/dummy/data.dart';
 import 'package:rye_coffee/model/order.model.dart';
 
@@ -31,11 +32,13 @@ class _OrderPageState extends State<OrderPage> {
       isLoading = true;
       orders = [];
     });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      isLoading = false;
-      orders = dummyOrderList;
-    });
+    OrderResponse response = await fetchOrderList();
+    if (!response.error) {
+      setState(() {
+        isLoading = false;
+        orders = response.data;
+      });
+    }
   }
 
   @override
@@ -52,7 +55,9 @@ class _OrderPageState extends State<OrderPage> {
               builder: (context, constraints) {
                 double height = constraints.maxHeight;
                 return RefreshIndicator(
-                  onRefresh: () async {},
+                  onRefresh: () async {
+                    _initPage();
+                  },
                   child: SizedBox(
                     height: height,
                     width: double.infinity,

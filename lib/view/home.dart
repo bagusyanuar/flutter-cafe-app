@@ -87,7 +87,9 @@ class _HomePageState extends State<HomePage> {
                           child: ProductsWrapper(
                             data: products,
                             onLoading: isProductsLoading,
-                            onRefresh: () async {},
+                            onRefresh: () async {
+                              _initPage();
+                            },
                             onCardTap: (product) {
                               // dynamic m = StorageMapper.productToMap(product);
                               // log(m.toString());
@@ -106,14 +108,16 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: ButtonFloatingCart(
-                qty: cartQty,
-                onTapCart: () {
-                  Navigator.pushNamed(context, '/cart').then((value) {
-                    _initPage();
-                  });
-                },
-              ),
+              child: isProductsLoading
+                  ? Container()
+                  : ButtonFloatingCart(
+                      qty: cartQty,
+                      onTapCart: () {
+                        Navigator.pushNamed(context, '/cart').then((value) {
+                          _initPage();
+                        });
+                      },
+                    ),
             ),
           )
         ],
@@ -145,7 +149,8 @@ class _HomePageState extends State<HomePage> {
 
   void _initPage() async {
     setState(() {
-      isCategoriesLoading = false;
+      isCategoriesLoading = true;
+      isProductsLoading = true;
     });
 
     //fetch category list
@@ -154,6 +159,7 @@ class _HomePageState extends State<HomePage> {
       Category selectedCategory = categoryResponse.data.first;
       setState(() {
         categories = categoryResponse.data;
+        isCategoriesLoading = false;
       });
 
       //fetch product list by selected ctegory
@@ -173,7 +179,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onCartChanged(int count) async {
-    log('cart changed');
     setState(() {
       cartQty = count;
     });
@@ -193,6 +198,10 @@ class _HomePageState extends State<HomePage> {
         return ModalProduct(
           id: id,
           onCartChanged: (count) => onCartChanged(count),
+          onGoToCart: () {
+            Navigator.pushNamed(rootContext, "/cart")
+                .then((value) => Navigator.pop(context));
+          },
         );
       },
     );

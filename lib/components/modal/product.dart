@@ -20,11 +20,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ModalProduct extends StatefulWidget {
   final int id;
   final Function(int count) onCartChanged;
+  final VoidCallback onGoToCart;
 
   const ModalProduct({
     Key? key,
     required this.id,
     required this.onCartChanged,
+    required this.onGoToCart,
   }) : super(key: key);
 
   @override
@@ -124,7 +126,7 @@ class _ModalProductState extends State<ModalProduct> {
                     )
                   : GestureDetector(
                       onTap: () {
-                        // widget.onGoToCart();
+                        widget.onGoToCart();
                       },
                       child: Container(
                         height: 50,

@@ -6,14 +6,18 @@ import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 
 class CardSummary extends StatelessWidget {
   final bool onLoading;
+  final bool onLoadingCheckout;
   final int totalPrice;
   final int totalPoint;
+  final VoidCallback onCheckout;
 
   const CardSummary({
     Key? key,
     required this.onLoading,
     required this.totalPrice,
     required this.totalPoint,
+    required this.onCheckout,
+    required this.onLoadingCheckout,
   }) : super(key: key);
 
   @override
@@ -108,20 +112,42 @@ class CardSummary extends StatelessWidget {
                   radius: 10,
                   margin: EdgeInsets.only(top: 10),
                 )
-              : Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.brown,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Checkout',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+              : GestureDetector(
+                  onTap: () {
+                    if (!onLoadingCheckout) {
+                      onCheckout();
+                    }
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.brown,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        onLoadingCheckout
+                            ? Container(
+                                height: 14,
+                                width: 14,
+                                margin: const EdgeInsets.only(right: 5),
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 1,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Container(),
+                        Text(
+                          onLoadingCheckout ? 'Loading...' : 'Checkout',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 )
@@ -130,3 +156,13 @@ class CardSummary extends StatelessWidget {
     );
   }
 }
+
+// const Center(
+//                       child: Text(
+//                         'Checkout',
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                           fontSize: 16,
+//                         ),
+//                       ),
+//                     ),

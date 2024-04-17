@@ -11,6 +11,7 @@ import 'package:rye_coffee/components/dialog.confirmation.dart';
 import 'package:rye_coffee/components/filler/empty.content.dart';
 import 'package:rye_coffee/components/shimmer/my.shimmer.dart';
 import 'package:rye_coffee/components/top.navbar.dart';
+import 'package:rye_coffee/controller/cart.dart';
 import 'package:rye_coffee/helper/storage.dart';
 import 'package:rye_coffee/helper/util.dart';
 import 'package:rye_coffee/model/cart.model.dart';
@@ -28,6 +29,7 @@ class _CartPageState extends State<CartPage> {
   List<dynamic> dataCart = [];
   int totalPrice = 0, totalPoint = 0;
   bool isLoading = true;
+  bool isLoadingCheckout = false;
   List<Cart> carts = [];
 
   @override
@@ -103,11 +105,30 @@ class _CartPageState extends State<CartPage> {
               onLoading: isLoading,
               totalPoint: totalPoint,
               totalPrice: totalPrice,
+              onLoadingCheckout: isLoadingCheckout,
+              onCheckout: () {
+                _checkout(context);
+              },
             )
           ],
         ),
       ),
     );
+  }
+
+  void _checkout(BuildContext rootContext) async {
+    setState(() {
+      isLoadingCheckout = true;
+    });
+    CartResponse response = await checkoutCart();
+    setState(() {
+      isLoadingCheckout = false;
+    });
+
+    if (!response.error) {
+      // ignore: use_build_context_synchronously
+      Navigator.popAndPushNamed(rootContext, "/order");
+    }
   }
 
   void _eventClearCart(BuildContext rootContext) {
